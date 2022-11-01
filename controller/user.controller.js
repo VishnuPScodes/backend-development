@@ -22,6 +22,9 @@ router.post('/',async (req,res)=>{
     try {
         const postData=new User(req.body);
         await postData.save();
+        //or
+        //const postData= await User.create(req.body);
+        //res.send(postData)
         res.status(201).send(postData)
     } catch (error) {
         res.send(error)
