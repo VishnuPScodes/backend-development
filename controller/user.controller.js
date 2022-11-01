@@ -3,7 +3,7 @@ import User from "../model/user.model.js";
 
 const router=express.Router();
 
-
+//get requests
 
 router.get('/',async (req,res)=>{
     try {
@@ -18,6 +18,8 @@ router.get('/',async (req,res)=>{
   
 })
 
+//post request
+
 router.post('/',async (req,res)=>{
     try {
         const postData=new User(req.body);
@@ -31,6 +33,8 @@ router.post('/',async (req,res)=>{
     }
 })
 
+//pathc request
+
 router.patch('/:id',async (req,res)=>{
     try {
        
@@ -42,8 +46,25 @@ router.patch('/:id',async (req,res)=>{
  
 
 })
+
+//getting a single item
+
 router.get('/:id',async (req,res)=>{
     const userData=await User.findById(req.params.id);
     res.send(userData)
+})
+
+//searching
+//pagination
+router.get("",async (req,res)=>{
+    const limit=req.query.limit ||15;
+    const page=req.query.page || 1;
+    const query=req.query.q    //eg for query => https://example.come?q=xyz
+    try {
+        const data=await User.find({first_name:query}).skip((page-1)*limit).limit(limit).lean().exec();
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+    }
 })
 export default router
